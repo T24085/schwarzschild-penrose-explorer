@@ -1,5 +1,7 @@
 # Event Horizon: a Schwarzschild mass–area explorer
 
+[Open the live explorer](https://t24085.github.io/schwarzschild-penrose-explorer/)
+
 An interactive static-site illustration of a Schwarzschild black hole’s exterior spatial geometry, spherical horizon area, and equality in the Penrose mass–area relation.
 
 **Scientific claim:** the analytic substitution below establishes equality for a classic Schwarzschild example. The visualization and floating-point checks do not verify the broader proposed Penrose theorem.
@@ -196,7 +198,9 @@ The original build passed 86 formula/geometry assertions and 38 simulated DOM/ca
 
 A subsequent actual Node run passed 80 independent formula/geometry assertions against the final physics source, including the horizon relations, scaling, embedding coordinates, metric agreement, and invalid input handling. Both JavaScript files also pass `node --check`. The site uses only the four local runtime files listed above, with no external runtime assets.
 
-Real browser interaction, mobile rendering, and live hosting checks are separate verification steps. Simulated tests and the analytic equality example do not establish a proof of the broader theorem.
+The public GitHub Pages deployment was verified in a real desktop browser. Live checks covered numeric mass changes (including radius and area scaling), invalid mass feedback, sphere view, normalized scale, camera buttons, Fit, and repeated Reset. Narrow responsive-window checks covered controls and live readouts. These are desktop-browser checks, not actual phone or multitouch-device testing. All four runtime assets returned HTTP 200.
+
+Simulated tests, browser QA, and the analytic equality example do not establish a proof of the broader theorem.
 
 ## Publication
 
