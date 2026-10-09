@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#070d18">
+<title>Event Horizon — Penrose mass–area explorer</title>
+<link rel="stylesheet" href="./styles.css">
+<script src="./physics.js" defer></script>
+<script src="./app.js" defer></script>
+</head>
+<body>
+<div class="page">
+<header class="masthead">
+  <a href="#explorer" class="wordmark" aria-label="Event Horizon explorer"><span class="logo" aria-hidden="true">◉</span> EVENT HORIZON</a>
+  <span class="edition">A SCHWARZSCHILD GEOMETRY STUDY <span class="status-dot"></span></span>
+</header>
+<main>
+<section class="intro">
+  <p class="eyebrow">GEOMETRY / MASS / AREA</p>
+  <h1>A boundary.<br><em>A deeper geometry.</em></h1>
+  <p class="lede">Turn a black hole’s mass into a shape you can explore. Follow the curved spatial slice to its horizon, then see the spherical area behind the Penrose mass bound.</p>
+</section>
+
+<section id="explorer" class="explorer" aria-label="Interactive Schwarzschild explorer">
+<div class="visual-panel">
+  <div class="scene-header">
+    <div class="view-tabs" role="group" aria-label="Geometry view">
+      <button id="sliceView" class="active" aria-pressed="true">Spatial slice</button>
+      <button id="sphereView" aria-pressed="false">Horizon sphere</button>
+    </div>
+    <span class="scene-tag">INTERACTIVE 3D</span>
+  </div>
+  <div id="viewport" class="viewport">
+    <canvas id="scene" tabindex="0" role="img" aria-label="Interactive 3D Schwarzschild spatial slice. Drag to rotate, scroll or pinch to zoom. Arrow keys rotate; plus and minus zoom."></canvas>
+    <div class="scene-heading"><span id="sceneKicker">FLAMM’S PARABOLOID</span><h2 id="sceneTitle">Space, in a single slice.</h2></div>
+    <span class="dimension-tag" id="dimensionTag">2D SPATIAL SLICE → 3D EMBEDDING</span>
+    <div class="legend"><span><i class="cyan"></i><span id="legendGeometry">Exterior geometry</span></span><span><i class="gold"></i>Horizon at r = 2m</span></div>
+    <div class="scene-bottom">
+      <span class="gesture-hint">Drag to orbit · scroll / pinch to zoom</span>
+      <div class="camera-buttons" role="group" aria-label="Camera controls">
+        <button id="rotateLeft" title="Rotate left" aria-label="Rotate left">↶</button>
+        <button id="rotateRight" title="Rotate right" aria-label="Rotate right">↷</button>
+        <button id="zoomOut" title="Zoom out" aria-label="Zoom out">−</button>
+        <button id="zoomIn" title="Zoom in" aria-label="Zoom in">+</button>
+        <button id="fit" title="Fit geometry to view">Fit</button>
+      </div>
+    </div>
+  </div>
+  <div class="scene-note" id="sceneNote">A constant-time equatorial spatial slice embedded in Euclidean 3D. The vertical direction illustrates distance geometry; it is not a literal funnel in space.</div>
+  <noscript><p class="error">JavaScript is required for the interactive geometry. The mathematics and source notes below remain readable.</p></noscript>
+</div>
+
+<aside class="control-panel" aria-label="Mass and geometry controls">
+  <div class="panel-top"><p class="eyebrow">THE CONTROL ROOM</p><button id="reset" class="reset">↺ Reset</button></div>
+  <label class="control-label" for="massNumber">Black-hole mass <span>M</span></label>
+  <div class="mass-entry"><input id="massNumber" type="number" min="1" max="100" step="0.1" value="10" inputmode="decimal" aria-describedby="massHelp massError"><span>M<sub>☉</sub></span></div>
+  <p id="massHelp" class="muted">Solar masses · 1 M<sub>☉</sub> ≈ 1.98847 × 10³⁰ kg</p>
+  <p id="massError" class="error" role="alert" hidden>Enter a mass from 1 to 100 solar masses.</p>
+  <input id="massRange" class="mass-range" type="range" min="0" max="2" step="0.001" value="1" aria-label="Black-hole mass in solar masses, logarithmic slider" aria-valuetext="10 solar masses">
+  <div class="range-ends"><span>1 M<sub>☉</sub></span><span>100 M<sub>☉</sub></span></div>
+  <div class="presets" role="group" aria-label="Mass presets">
+    <button data-mass="3">3 M<sub>☉</sub></button><button data-mass="10" class="selected">10 M<sub>☉</sub></button><button data-mass="30">30 M<sub>☉</sub></button>
+  </div>
+  <fieldset class="scale-field"><legend>Coordinate scale</legend><div class="scale-options">
+    <label><input type="radio" name="scale" value="physical" checked><span>Fixed kilometres</span></label>
+    <label><input type="radio" name="scale" value="normalized"><span>Normalized by m</span></label>
+  </div></fieldset>
+  <p class="scale-explainer" id="scaleHelp">The camera scale stays fixed as mass changes. Larger mass means a larger geometry. Use Fit to reframe.</p>
+
+  <div class="readouts" aria-live="polite" aria-atomic="true">
+    <div class="readout"><span>Horizon radius <small>r<sub>s</sub> = 2GM/c²</small></span><strong id="radius">29.53 <small>km</small></strong></div>
+    <div class="readout"><span>Spherical horizon area <small>A = 4πr<sub>s</sub>²</small></span><strong id="area">10,960.66 <small>km²</small></strong></div>
+    <div class="readout"><span>Geometric mass <small>m = GM/c²</small></span><strong id="geoMass">14.77 <small>km</small></strong></div>
+  </div>
+
+  <div class="bound-card"><p class="eyebrow">PENROSE MASS BOUND</p>
+    <div class="bound-formula">M ≥ <span class="fraction"><span>c²</span><span>G</span></span> √<span class="radicand">A<sub>min</sub> / 16π</span></div>
+    <p class="bound-value" id="bound">10.00 <span>M<sub>☉</sub></span></p>
+    <p class="equality"><span aria-hidden="true">=</span> Schwarzschild saturates the bound</p>
+    <p class="bound-note">Here A<sub>min</sub> is set to this Schwarzschild horizon’s area. The computed lower bound equals the selected mass.</p>
+  </div>
+</aside>
+</section>
+
+<section class="example-check" aria-label="Schwarzschild example equality check">
+  <div><p class="eyebrow">FOLLOW THE SUBSTITUTION</p><h2>One example,<br>step by step.</h2><span class="check-type">Example check · not theorem verification</span></div>
+  <div class="equation-steps">
+    <div class="equation-step"><p>1. Convert physical mass to geometric length.</p><code id="stepMass">m = GM/c²</code></div>
+    <div class="equation-step"><p>2. Compute the spherical horizon area.</p><code id="stepArea">A = 16πm²</code></div>
+    <div class="equation-step"><p>3. Substitute that area into the lower bound.</p><code id="stepBound">√(A/16π) = √(m²) = m, since m &gt; 0</code></div>
+    <div class="equation-step"><p>4. Convert the bound back to solar masses.</p><code id="stepResult">M ≥ (c²/G)m = M</code></div>
+  </div>
+  <p class="example-context">The analytic substitution proves equality for this established Schwarzschild example. The displayed numbers check that example with rounded readouts. The broader proposed theorem requires its manuscript assumptions and is not verified by this visualization. <a href="https://github.com/openai/math/blob/main/lean/docs/260.md" target="_blank" rel="noopener noreferrer">See exactly what is formalized ↗</a></p>
+  <p class="example-context"><strong>Assumptions &amp; coverage.</strong> The linked Lean scope concerns Cha–Khuri–Sakovich hyperboloidal initial data, end replacement preserving completeness and the dominant energy condition, and strictly future-timelike initial-data charge. It includes Schwarzschild equality examples. The general Bondi–Penrose inequality for possibly disconnected weakly trapped boundaries remains unformalized; a supporting connected-boundary inequality is conditional on an exterior Penrose inequality. This explorer checks a Schwarzschild equality example only. Consult the manuscript for its full hypotheses.</p>
+</section>
+
+<section class="explanation" aria-label="Understanding the mathematics">
+  <div class="explanation-heading"><p class="eyebrow">READ THE GEOMETRY</p><h2>What the picture<br><em>actually means.</em></h2></div>
+  <div class="explanation-grid">
+    <article><span class="article-number">01 / THE SLICE</span><h3>Curvature is about distances.</h3><p>On a constant-time equatorial slice, radial distances are stretched relative to Euclidean space. The mesh represents that two-dimensional metric as a surface in three dimensions.</p><div class="math-block">ds² = dr² / (1 − 2m/r) + r² dφ²<br>z = +√[8m(r − 2m)], &nbsp; r &gt; 2m</div><p class="muted">The rim at r = 2m is the limiting boundary. The extra embedding direction is not an additional physical dimension. Only one exterior sheet is shown.</p></article>
+    <article><span class="article-number">02 / THE HORIZON</span><h3>The area wraps a sphere.</h3><p>The horizon has areal radius 2m. Its surface area is 4π(2m)² = 16πm². A disk drawn across the mesh’s rim would have only π(2m)² — one quarter of the spherical area.</p><div class="math-block">A = 16πm²<br>Double M → double r<sub>s</sub> → four times A</div><p class="muted">The sphere view is a separate representation of the horizon’s intrinsic area, not a sphere sitting inside the embedding surface.</p></article>
+    <article><span class="article-number">03 / THE BOUND</span><h3>Area sets a mass floor.</h3><p>Under the relevant manuscript assumptions, the proposed Penrose inequality gives m ≥ √(A<sub>min</sub>/16π), where A<sub>min</sub> denotes the appropriate least enclosing area. In the Schwarzschild equality example, A<sub>min</sub> = 16πm².</p><div class="math-block">m ≥ √(A<sub>min</sub> / 16π)<br>M ≥ (c²/G) √(A<sub>min</sub> / 16π)</div><p class="muted">Dividing all lengths by m makes every positive-mass Schwarzschild shape coincide. Changing mass changes its physical size.</p></article>
+  </div>
+</section>
+
+<section class="scope-note" aria-label="Scientific scope">
+  <span class="scope-icon" aria-hidden="true">i</span><div><h3>An illustration, with a precise scope.</h3><p>This is a classic Schwarzschild equality illustration associated with OpenAI’s proposed Penrose results. It does not verify the broader theorem, introduce a new gravity theory, or run a numerical-relativity simulation. The established Schwarzschild formulas are distinct from the proposed general result. The repository’s Lean scope note includes canonical Schwarzschild equality examples and states that the general Bondi–Penrose inequality remains unformalized.</p></div>
+</section>
+
+<footer><div><p class="eyebrow">PRIMARY SOURCES</p><nav class="source-links" aria-label="Primary mathematical sources">
+  <a href="https://github.com/openai/math/blob/main/preprints/Spacetime-Penrose-inequalities-enclosing-area-charge-and-rigidity-October-5-2026/paper.pdf" target="_blank" rel="noopener noreferrer">Penrose manuscript <span>↗</span></a>
+  <a href="https://github.com/openai/math/blob/main/lean/docs/260.md" target="_blank" rel="noopener noreferrer">Lean formalization scope <span>↗</span></a>
+  <a href="https://www.nature.com/articles/s41598-024-69871-w" target="_blank" rel="noopener noreferrer">Embedding diagrams · Scientific Reports <span>↗</span></a>
+</nav></div><p class="footer-note">Built for curiosity.<br>G = 6.67430 × 10⁻¹¹ m³ kg⁻¹ s⁻²<br>c = 299,792,458 m/s</p></footer>
+</main>
+</div>
+</body>
+</html>
+
